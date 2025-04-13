@@ -1,8 +1,9 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+
+import { Button } from '@/components/ui/button';
 
 export default function Pagination({
   currentPage,
@@ -82,7 +83,7 @@ export default function Pagination({
             return (
               <span
                 key={`ellipsis-${index}`}
-                className='px-2 text-muted-foreground'
+                className='text-muted-foreground px-2'
               >
                 ...
               </span>
