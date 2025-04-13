@@ -1,5 +1,3 @@
-'use client';
-
 import {
   Pagination,
   PaginationContent,
@@ -12,42 +10,70 @@ import {
 
 interface ProductPaginationProps {
   currentPage: number;
-  totalPages: number;
+  totalItems: number;
+  pageSize?: number;
   baseUrl?: string;
+  siblingCount?: number;
 }
 
 /**
- * ProductPagination is a component that displays a pagination for a list of products.
- * @param currentPage - The current page number.
- * @param totalPages - The total number of pages.
- * @param baseUrl - The base URL of the page.
- * @returns A pagination component.
+ * Server Component for product pagination
+ * Handles pagination logic and rendering on the server side
  */
 export default function ProductPagination({
   currentPage,
-  totalPages,
+  totalItems,
+  pageSize = 12,
   baseUrl = '/',
+  siblingCount = 2,
 }: ProductPaginationProps) {
+  // Calculate total pages
+  const totalPages = Math.ceil(totalItems / pageSize);
+
   // Generate pagination items
-  const paginationItems = [];
-  for (let i = 1; i <= totalPages; i++) {
-    // Show first page, last page, and pages around current page
-    if (
-      i === 1 ||
-      i === totalPages ||
-      (i >= currentPage - 2 && i <= currentPage + 2)
-    ) {
-      paginationItems.push(i);
-    } else if (i === currentPage - 3 || i === currentPage + 3) {
-      paginationItems.push('ellipsis');
+  const generatePaginationItems = () => {
+    const items = [];
+    const leftSiblingIndex = Math.max(currentPage - siblingCount, 1);
+    const rightSiblingIndex = Math.min(currentPage + siblingCount, totalPages);
+
+    // Add first page
+    items.push(1);
+
+    // Add ellipsis after first page if needed
+    if (leftSiblingIndex > 2) {
+      items.push('ellipsis');
     }
-  }
+
+    // Add sibling pages
+    for (let i = leftSiblingIndex; i <= rightSiblingIndex; i++) {
+      if (i !== 1 && i !== totalPages) {
+        items.push(i);
+      }
+    }
+
+    // Add ellipsis before last page if needed
+    if (rightSiblingIndex < totalPages - 1) {
+      items.push('ellipsis');
+    }
+
+    // Add last page if not already included
+    if (totalPages > 1) {
+      items.push(totalPages);
+    }
+
+    return items;
+  };
 
   const getPageUrl = (page: number) => {
-    const url = new URL(baseUrl, 'http://placeholder');
-    url.searchParams.set('page', page.toString());
-    return `${url.pathname}${url.search}`;
+    // Server-side URL generation
+    const searchParams = new URLSearchParams();
+    searchParams.set('page', page.toString());
+    return `${baseUrl}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
   };
+
+  if (totalPages <= 1) return null;
+
+  const paginationItems = generatePaginationItems();
 
   return (
     <Pagination>

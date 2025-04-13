@@ -1,40 +1,28 @@
 import { Suspense } from 'react';
 
-import ProductGrid from '@/components/products/ProductGrid';
-import ProductGridSkeleton from '@/components/products/ProductGridSkeleton';
-import ProductPagination from '@/components/products/ProductPagination';
-import { getProducts, getProductsCount } from '@/lib/services/product.service';
+import CartProvider from '@/components/cart-provider';
+import ProductList from '@/components/product-list';
+import ProductListSkeleton from '@/components/product-list-skeleton';
 
-interface HomeProps {
-  searchParams: {
+export default function Home({
+  searchParams,
+}: {
+  searchParams?: Promise<{
     page?: string;
-  };
-}
-
-export default async function Home({ searchParams }: HomeProps) {
-  const currentPage = Number(searchParams.page) || 1;
-  const pageSize = 12;
-  const offset = (currentPage - 1) * pageSize;
-
-  const productsPromise = getProducts(offset, pageSize);
-  const totalPromise = getProductsCount();
-
-  const [products, total] = await Promise.all([productsPromise, totalPromise]);
-  const totalPages = Math.ceil(total / pageSize);
-
+    categoryId?: string;
+    subcategory?: string;
+    search?: string;
+  }>;
+}) {
   return (
-    <main className='container mx-auto px-4 py-8'>
-      <h1 className='mb-8 text-3xl font-bold'>Our Products</h1>
-      <Suspense fallback={<ProductGridSkeleton />}>
-        <ProductGrid products={products} />
-      </Suspense>
-      <div className='mt-8'>
-        <ProductPagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          baseUrl='/'
-        />
-      </div>
-    </main>
+    <CartProvider>
+      <main className='container mx-auto px-4 py-8'>
+        <h1 className='mb-8 text-center text-3xl font-bold'>Product Catalog</h1>
+
+        <Suspense fallback={<ProductListSkeleton />}>
+          <ProductList searchParams={searchParams} />
+        </Suspense>
+      </main>
+    </CartProvider>
   );
 }

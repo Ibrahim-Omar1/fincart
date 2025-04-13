@@ -42,7 +42,7 @@ function ProductCard({ product }: ProductCardProps) {
         <h3 className='mb-2 line-clamp-1 text-lg font-semibold'>
           {product.title}
         </h3>
-        <p className='text-muted-foreground line-clamp-2 text-sm'>
+        <p className='line-clamp-2 text-sm text-muted-foreground'>
           {product.description}
         </p>
       </CardContent>

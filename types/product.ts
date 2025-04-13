@@ -1,16 +1,18 @@
+export interface Category {
+  id: number;
+  name: string;
+  image: string;
+}
+
 export interface Product {
   id: number;
   title: string;
   price: number;
   description: string;
-  category: {
-    id: number;
-    name: string;
-    image: string;
-  };
+  category: Category;
   images: string[];
-  createdAt: string;
-  updatedAt: string;
+  creationAt?: string;
+  updatedAt?: string;
 }
 
 export interface ProductsResponse {
@@ -18,6 +20,23 @@ export interface ProductsResponse {
   limit: number;
   total: number;
   products: Product[];
+}
+
+export interface ProductFilters {
+  title?: string;
+  price?: number;
+  price_min?: number;
+  price_max?: number;
+  categoryId?: number;
+  offset?: number;
+  limit?: number;
+}
+
+// API Error Response
+export interface ApiError {
+  statusCode: number;
+  message: string;
+  error: string;
 }
 
 export interface CartItem extends Product {
