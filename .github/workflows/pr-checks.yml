@@ -1,0 +1,63 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: ['*']
+  
+jobs:
+  format:
+    name: 🎨 Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Check formatting
+        run: npm run format:check || (echo "::error::Prettier check failed" && exit 1)
+
+  lint:
+    name: 🧹 Lint Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Check linting
+        run: npm run lint || (echo "::error::ESLint check failed" && exit 1)
+
+  typecheck:
+    name: 📝 Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Check types
+        run: npm run typecheck || (echo "::error::TypeScript type check failed" && exit 1) 
