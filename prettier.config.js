@@ -6,7 +6,7 @@ module.exports = {
   useTabs: false,
   trailingComma: 'all',
   printWidth: 80,
-  endOfLine: 'lf',
+  endOfLine: 'auto',
   arrowParens: 'avoid',
   bracketSpacing: true,
   embeddedLanguageFormatting: 'auto',

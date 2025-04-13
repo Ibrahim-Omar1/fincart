@@ -9,6 +9,15 @@ export interface Product {
     image: string;
   };
   images: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProductsResponse {
+  offset: number;
+  limit: number;
+  total: number;
+  products: Product[];
 }
 
 export interface CartItem extends Product {
