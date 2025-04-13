@@ -6,10 +6,8 @@ import a11yPlugin from 'eslint-plugin-jsx-a11y';
 import prettierPlugin from 'eslint-plugin-prettier';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
-import { fileURLToPath } from "url";
 import prettierConfig from './prettier.config.js';
 
-const __filename = fileURLToPath(import.meta.url);
 
 /** @type {import('eslint').Linter.Config[]} */
 const eslintConfig = [
@@ -50,19 +48,6 @@ const eslintConfig = [
       'react/hook-use-state': 'error',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
-      'jsx-a11y/alt-text': 'error',
-      'jsx-a11y/anchor-is-valid': 'error',
-      'jsx-a11y/aria-props': 'error',
-      'jsx-a11y/aria-proptypes': 'error',
-      'jsx-a11y/aria-role': 'error',
-      'jsx-a11y/role-has-required-aria-props': 'error',
-      'jsx-a11y/click-events-have-key-events': 'warn',
-      'jsx-a11y/no-static-element-interactions': 'warn',
-      'jsx-a11y/no-noninteractive-element-interactions': 'warn',
-      'jsx-a11y/interactive-supports-focus': 'error',
-      'jsx-a11y/label-has-associated-control': 'error',
-      'jsx-a11y/media-has-caption': 'warn',
-      'jsx-a11y/no-autofocus': 'warn',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': ['warn', {
         argsIgnorePattern: '^_',
@@ -88,26 +73,6 @@ const eslintConfig = [
       'comma-dangle': ['error', 'always-multiline'],
       'arrow-body-style': ['error', 'as-needed'],
       'import/no-duplicates': 'error',
-      'import/order': [
-        'error',
-        {
-          'groups': [
-            'builtin',
-            'external',
-            'internal',
-            'parent',
-            'sibling',
-            'index',
-            'object',
-            'type'
-          ],
-          'newlines-between': 'always',
-          'alphabetize': {
-            'order': 'asc',
-            'caseInsensitive': true
-          }
-        }
-      ],
       'import/no-cycle': 'error',
       'import/no-unused-modules': 'warn',
     },

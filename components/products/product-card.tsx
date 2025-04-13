@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from '../ui/card';
 
-import AddToCart from './AddToCart';
+import AddToCart from '../cart/AddToCart';
 
 import type { Product } from '@/lib/types';
 
