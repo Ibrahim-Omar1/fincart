@@ -3,7 +3,7 @@ module.exports = {
   semi: true,
   singleQuote: true,
   tabWidth: 2,
-  useTabs: false,
+  useTabs: true,
   trailingComma: 'all',
   printWidth: 80,
   endOfLine: 'auto',
@@ -16,5 +16,5 @@ module.exports = {
   proseWrap: 'preserve',
   quoteProps: 'as-needed',
   requirePragma: false,
-  plugins: ['prettier-plugin-tailwindcss'], // Auto-sorts Tailwind CSS classes
+  plugins: ['prettier-plugin-tailwindcss'],
 };
