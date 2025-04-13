@@ -1,12 +1,12 @@
 export default async function ProductList({
-  searchParams,
+	searchParams,
 }: {
-  searchParams?: Promise<{
-    page?: string;
-    categoryId?: string;
-    subcategory?: string;
-    search?: string;
-  }>;
+	searchParams?: Promise<{
+		page?: string;
+		categoryId?: string;
+		subcategory?: string;
+		search?: string;
+	}>;
 }) {
-  return <p>Product List</p>;
+	return <p>Product List</p>;
 }

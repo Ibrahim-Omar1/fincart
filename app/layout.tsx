@@ -9,21 +9,21 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Next.js 15 E-commerce',
-  description: 'Modern e-commerce app built with Next.js 15',
+	title: 'Next.js 15 E-commerce',
+	description: 'Modern e-commerce app built with Next.js 15',
 };
 
 export default function RootLayout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-  return (
-    <html>
-      <body className={inter.className}>
-        <Header />
-        {children}
-      </body>
-    </html>
-  );
+	return (
+		<html>
+			<body className={inter.className}>
+				<Header />
+				{children}
+			</body>
+		</html>
+	);
 }
