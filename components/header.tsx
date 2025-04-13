@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import Cart from './cart';
+import Cart from './products/cart';
 
 export default function Header() {
   return (

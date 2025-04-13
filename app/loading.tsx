@@ -1,4 +1,4 @@
-import ProductListSkeleton from '@/components/product-list-skeleton';
+import ProductListSkeleton from '@/components/products/product-list-skeleton';
 
 export default function Loading() {
   return (

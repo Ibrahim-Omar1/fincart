@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 
-import CartProvider from '@/components/cart-provider';
-import ProductList from '@/components/product-list';
-import ProductListSkeleton from '@/components/product-list-skeleton';
+import CartProvider from '@/components/products/cart-provider';
+import ProductList from '@/components/products/product-list';
+import ProductListSkeleton from '@/components/products/product-list-skeleton';
 
 export default function Home({
   searchParams,

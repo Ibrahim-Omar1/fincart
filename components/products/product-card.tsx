@@ -1,37 +1,18 @@
-'use client';
-
-import { Check, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
 
-import type { Product } from '@/lib/types';
-
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { useCartStore } from '@/lib/store';
+} from '../ui/card';
+
+import AddToCart from './AddToCart';
+
+import type { Product } from '@/lib/types';
 
 export default function ProductCard({ product }: { product: Product }) {
-  const { addToCart, items } = useCartStore();
-  const [isAdding, setIsAdding] = useState(false);
-
-  const isInCart = items.some(item => item.id === product.id);
-
-  const handleAddToCart = () => {
-    setIsAdding(true);
-    addToCart(product);
-
-    // Visual feedback
-    setTimeout(() => {
-      setIsAdding(false);
-    }, 500);
-  };
-
   return (
     <Card className='flex h-full flex-col overflow-hidden py-0 transition-shadow hover:shadow-lg'>
       <div className='relative aspect-square overflow-hidden'>
@@ -59,22 +40,7 @@ export default function ProductCard({ product }: { product: Product }) {
       <CardFooter className='flex items-center justify-between p-4 pt-0'>
         <p className='text-lg font-bold'>${product.price.toFixed(2)}</p>
 
-        <Button
-          onClick={handleAddToCart}
-          disabled={isInCart || isAdding}
-          size='sm'
-          variant={isInCart ? 'outline' : 'default'}
-        >
-          {isInCart ? (
-            <>
-              <Check className='mr-1 h-4 w-4' /> Added
-            </>
-          ) : (
-            <>
-              <ShoppingCart className='mr-1 h-4 w-4' /> Add to Cart
-            </>
-          )}
-        </Button>
+        <AddToCart product={product} />
       </CardFooter>
     </Card>
   );
