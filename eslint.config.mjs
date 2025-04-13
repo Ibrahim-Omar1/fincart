@@ -1,37 +1,22 @@
-import { FlatCompat } from "@eslint/eslintrc";
 import nextPlugin from '@next/eslint-plugin-next';
 import tseslint from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
 import importPlugin from 'eslint-plugin-import';
 import a11yPlugin from 'eslint-plugin-jsx-a11y';
 import prettierPlugin from 'eslint-plugin-prettier';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
-import { dirname } from "path";
 import { fileURLToPath } from "url";
-import prettierConfig from './.prettierrc.js';
+import prettierConfig from './prettier.config.js';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
 
 /** @type {import('eslint').Linter.Config[]} */
 const eslintConfig = [
-  ...compat.config({
-    extends: ['next/core-web-vitals'],
-    settings: {
-      next: {
-        rootDir: __dirname,
-      },
-    },
-  }),
-
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
-      parser,
+      parser: tsParser,
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
