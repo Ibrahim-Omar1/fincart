@@ -3,7 +3,7 @@ export default function Home() {
   return (
     <div>
       <h1>
-        Hello World cli test
+        Hello World CLI test
       </h1>
     </div>
   );
