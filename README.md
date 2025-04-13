@@ -106,17 +106,20 @@ Add this to your VS Code settings:
 ### Best Practices
 
 1. **Components**
+
    - Use functional components with TypeScript
    - Follow single responsibility principle
    - Implement proper error boundaries
    - Use proper prop typing
 
 2. **State Management**
+
    - Use React hooks for local state
    - Implement proper data fetching strategies
    - Follow Server Components patterns
 
 3. **Performance**
+
    - Implement proper code splitting
    - Use Image component for images
    - Follow Core Web Vitals guidelines

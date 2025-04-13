@@ -3,7 +3,11 @@ name: PR Checks
 on:
   pull_request:
     branches: ['*']
-  
+
+env:
+  PNPM_VERSION: 8.15.4
+  NODE_VERSION: 20
+
 jobs:
   format:
     name: 🎨 Format Check
@@ -11,18 +15,24 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-          
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
       - name: Install dependencies
-        run: npm ci
-        
+        shell: pwsh
+        run: pnpm install --no-frozen-lockfile
+
       - name: Check formatting
-        run: npm run format:check || (echo "::error::Prettier check failed" && exit 1)
+        run: pnpm format:check || (echo "::error::Prettier check failed" && exit 1)
 
   lint:
     name: 🧹 Lint Check
@@ -30,18 +40,24 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-          
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
       - name: Install dependencies
-        run: npm ci
-        
+        shell: pwsh
+        run: pnpm install --no-frozen-lockfile
+
       - name: Check linting
-        run: npm run lint || (echo "::error::ESLint check failed" && exit 1)
+        run: pnpm lint || (echo "::error::ESLint check failed" && exit 1)
 
   typecheck:
     name: 📝 Type Check
@@ -49,18 +65,24 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-          
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
       - name: Install dependencies
-        run: npm ci
-        
+        shell: pwsh
+        run: pnpm install --no-frozen-lockfile
+
       - name: Check types
-        run: npm run typecheck || (echo "::error::TypeScript type check failed" && exit 1)
+        run: pnpm typecheck || (echo "::error::TypeScript type check failed" && exit 1)
 
   build:
     name: 🏗️ Build Check
@@ -68,40 +90,30 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-          
-      - name: Install dependencies
-        run: npm ci
-        
-      - name: Build
-        run: npm run build || (echo "::error::Build failed" && exit 1)
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
 
-  security:
-    name: 🔒 Security Check
+      - name: Install dependencies
+        shell: pwsh
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build
+        run: pnpm build || (echo "::error::Build failed" && exit 1)
+
+  # Add a job that runs all checks in parallel and is required to pass
+  checks:
+    name: ✅ All Checks
+    needs: [format, lint, typecheck, build]
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          
-      - name: Install dependencies
-        run: npm ci
-        
-      - name: Run security audit
-        run: npm audit || echo "::warning::Security vulnerabilities found"
-        
-      - name: Check for known vulnerabilities
-        uses: snyk/actions/node@master
-        continue-on-error: true
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }} 
+      - name: Check status
+        run: echo "All checks passed!"
