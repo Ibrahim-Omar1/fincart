@@ -28,12 +28,8 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: |
-          if [ -f "pnpm-lock.yaml" ]; then
-            pnpm install --frozen-lockfile
-          else
-            pnpm install
-          fi
+        shell: pwsh
+        run: pnpm install --no-frozen-lockfile
 
       - name: Check formatting
         run: pnpm format:check || (echo "::error::Prettier check failed" && exit 1)
@@ -57,12 +53,8 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: |
-          if [ -f "pnpm-lock.yaml" ]; then
-            pnpm install --frozen-lockfile
-          else
-            pnpm install
-          fi
+        shell: pwsh
+        run: pnpm install --no-frozen-lockfile
 
       - name: Check linting
         run: pnpm lint || (echo "::error::ESLint check failed" && exit 1)
@@ -86,12 +78,8 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: |
-          if [ -f "pnpm-lock.yaml" ]; then
-            pnpm install --frozen-lockfile
-          else
-            pnpm install
-          fi
+        shell: pwsh
+        run: pnpm install --no-frozen-lockfile
 
       - name: Check types
         run: pnpm typecheck || (echo "::error::TypeScript type check failed" && exit 1)
@@ -115,12 +103,8 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: |
-          if [ -f "pnpm-lock.yaml" ]; then
-            pnpm install --frozen-lockfile
-          else
-            pnpm install
-          fi
+        shell: pwsh
+        run: pnpm install --no-frozen-lockfile
 
       - name: Build
         run: pnpm build || (echo "::error::Build failed" && exit 1)
