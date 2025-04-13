@@ -2,6 +2,7 @@ import { Inter } from 'next/font/google';
 
 import type { Metadata } from 'next';
 
+import { NavBar } from '@/components/navigation/nav-bar';
 import { Toaster } from '@/components/ui/sonner';
 import './globals.css';
 
@@ -20,7 +21,8 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={inter.className}>
-        {children}
+        <NavBar />
+        <main>{children}</main>
         <Toaster />
       </body>
     </html>
