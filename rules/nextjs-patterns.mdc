@@ -1,0 +1,229 @@
+---
+description: Next.js 14 Patterns and Best Practices
+globs: 
+alwaysApply: true
+---
+---
+description: Next.js 14 Patterns and Best Practices
+globs: ["**/*.ts", "**/*.tsx", "**/app/**/*"]
+alwaysApply: true
+---
+# Next.js 14 Patterns and Best Practices
+
+@file .cursorrules
+@file package.json
+
+## Project Structure
+```
+src/
+  app/                    # App Router pages
+    (auth)/              # Auth group routes
+    (dashboard)/         # Dashboard group routes
+    api/                 # Route handlers
+    layout.tsx          # Root layout
+    page.tsx            # Home page
+  components/           # Shared components
+    ui/                 # UI components
+    forms/             # Form components
+  lib/                 # Utilities
+  hooks/              # Custom hooks
+  types/              # TypeScript types
+  middleware.ts      # Next.js middleware
+```
+
+## Server Components Best Practices
+```typescript
+// Default to Server Components
+// app/page.tsx
+export default async function Page() {
+  // Fetch data directly
+  const data = await fetchData()
+  return <Component data={data} />
+}
+
+// Use 'use client' only when needed
+'use client'
+import { useState } from 'react'
+```
+
+## Data Fetching Patterns
+```typescript
+// 1. Server Component Fetch (Preferred)
+async function ServerComponent() {
+  const data = await fetch('https://api.example.com/data', {
+    next: { revalidate: 3600 } // Cache for 1 hour
+  })
+  return <div>{data}</div>
+}
+
+// 2. Route Handler
+// app/api/data/route.ts
+export async function GET() {
+  const data = await getData()
+  return Response.json(data)
+}
+
+// 3. Server Actions
+export async function submitForm(data: FormData) {
+  'use server'
+  await saveData(data)
+  revalidatePath('/data')
+}
+```
+
+## Route Handlers
+```typescript
+// app/api/items/route.ts
+import { NextResponse } from 'next/server'
+import { z } from 'zod'
+
+const schema = z.object({
+  title: z.string(),
+})
+
+export async function POST(request: Request) {
+  try {
+    const json = await request.json()
+    const body = schema.parse(json)
+    
+    const item = await db.item.create(body)
+    return NextResponse.json(item, { status: 201 })
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Invalid request' },
+      { status: 400 }
+    )
+  }
+}
+```
+
+## Middleware Patterns
+```typescript
+// middleware.ts
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+
+export function middleware(request: NextRequest) {
+  // Check auth
+  const token = request.cookies.get('token')
+  if (!token) {
+    return NextResponse.redirect(new URL('/login', request.url))
+  }
+
+  // Add headers
+  const response = NextResponse.next()
+  response.headers.set('x-custom-header', 'value')
+  return response
+}
+
+export const config = {
+  matcher: ['/dashboard/:path*', '/api/:path*']
+}
+```
+
+## Metadata and SEO
+```typescript
+// app/layout.tsx
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  metadataBase: new URL('https://example.com'),
+  title: {
+    template: '%s | Site Name',
+    default: 'Site Name',
+  },
+  description: 'Site description',
+  openGraph: {
+    type: 'website',
+  }
+}
+```
+
+## Error Handling
+```typescript
+// app/error.tsx
+'use client'
+
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string }
+  reset: () => void
+}) {
+  return (
+    <div>
+      <h2>Something went wrong!</h2>
+      <button onClick={() => reset()}>Try again</button>
+    </div>
+  )
+}
+```
+
+## Loading States
+```typescript
+// app/loading.tsx
+export default function Loading() {
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary" />
+    </div>
+  )
+}
+```
+
+## Authentication with NextAuth
+```typescript
+// app/api/auth/[...nextauth]/route.ts
+import NextAuth from 'next-auth'
+import { authOptions } from '@/lib/auth'
+
+const handler = NextAuth(authOptions)
+export { handler as GET, handler as POST }
+
+// Protect routes
+import { auth } from '@/lib/auth'
+
+export default async function ProtectedPage() {
+  const session = await auth()
+  if (!session) redirect('/login')
+  return <div>Protected Content</div>
+}
+```
+
+## Internationalization with next-intl
+```typescript
+// middleware.ts
+import createMiddleware from 'next-intl/middleware'
+
+export default createMiddleware({
+  locales: ['en', 'de'],
+  defaultLocale: 'en'
+})
+
+// app/[locale]/layout.tsx
+import { useLocale } from 'next-intl'
+import { notFound } from 'next/navigation'
+
+export default function LocaleLayout({ children, params }) {
+  const locale = useLocale()
+  if (params.locale !== locale) notFound()
+  return children
+}
+```
+
+## Performance Optimization
+- Use React Suspense boundaries
+- Implement proper caching strategies
+- Optimize images with next/image
+- Use streaming for large pages
+- Implement proper loading states
+- Use route groups for code splitting
+
+## Security Best Practices
+- Implement proper CORS policies
+- Use environment variables
+- Validate all inputs with Zod
+- Implement rate limiting
+- Use proper auth middleware
+- Handle CSRF protection 

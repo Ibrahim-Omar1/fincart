@@ -1,0 +1,256 @@
+---
+description: React Patterns and Best Practices
+globs: 
+alwaysApply: true
+---
+---
+description: React Patterns and Best Practices
+globs: ["**/*.tsx", "**/*.ts"]
+alwaysApply: true
+---
+# React Patterns and Best Practices
+
+@file .cursorrules
+@file package.json
+
+## Component Patterns
+
+### Functional Components
+```typescript
+// Prefer functional components
+const Component = ({ prop }: Props) => {
+  return <div>{prop}</div>
+}
+
+// With type safety
+interface Props {
+  prop: string
+  optional?: boolean
+}
+
+const TypedComponent: React.FC<Props> = ({ 
+  prop,
+  optional = false 
+}) => {
+  return <div>{prop}</div>
+}
+```
+
+### Custom Hooks
+```typescript
+// Extract reusable logic
+const useCustomHook = (initialValue: string) => {
+  const [value, setValue] = useState(initialValue)
+  const update = useCallback((newValue: string) => {
+    setValue(newValue)
+  }, [])
+
+  return { value, update }
+}
+
+// Usage
+const Component = () => {
+  const { value, update } = useCustomHook('initial')
+  return <button onClick={() => update('new')}>{value}</button>
+}
+```
+
+### Compound Components
+```typescript
+// Flexible and composable components
+const Select = ({ children }: { children: React.ReactNode }) => {
+  const [value, setValue] = useState('')
+  return (
+    <SelectContext.Provider value={{ value, setValue }}>
+      {children}
+    </SelectContext.Provider>
+  )
+}
+
+Select.Option = ({ value, children }: OptionProps) => {
+  const context = useContext(SelectContext)
+  return (
+    <option value={value} onClick={() => context.setValue(value)}>
+      {children}
+    </option>
+  )
+}
+
+// Usage
+<Select>
+  <Select.Option value="1">Option 1</Select.Option>
+  <Select.Option value="2">Option 2</Select.Option>
+</Select>
+```
+
+### Render Props
+```typescript
+// Flexible component rendering
+interface RenderProps {
+  render: (value: string) => React.ReactNode
+}
+
+const DataProvider = ({ render }: RenderProps) => {
+  const [data] = useState('data')
+  return <>{render(data)}</>
+}
+
+// Usage
+<DataProvider render={(value) => <div>{value}</div>} />
+```
+
+## State Management
+
+### Local State
+```typescript
+// Use useState for simple state
+const [state, setState] = useState<string>('')
+
+// Use useReducer for complex state
+type State = { count: number }
+type Action = { type: 'increment' | 'decrement' }
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case 'increment':
+      return { count: state.count + 1 }
+    case 'decrement':
+      return { count: state.count - 1 }
+    default:
+      return state
+  }
+}
+
+const Component = () => {
+  const [state, dispatch] = useReducer(reducer, { count: 0 })
+  return (
+    <button onClick={() => dispatch({ type: 'increment' })}>
+      {state.count}
+    </button>
+  )
+}
+```
+
+### Context API
+```typescript
+// Create context with type safety
+interface ContextType {
+  theme: string
+  setTheme: (theme: string) => void
+}
+
+const ThemeContext = createContext<ContextType | undefined>(undefined)
+
+// Provider
+export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+  const [theme, setTheme] = useState('light')
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  )
+}
+
+// Custom hook for using context
+export const useTheme = () => {
+  const context = useContext(ThemeContext)
+  if (!context) {
+    throw new Error('useTheme must be used within ThemeProvider')
+  }
+  return context
+}
+```
+
+## Performance Optimization
+
+### Memoization
+```typescript
+// Memoize expensive calculations
+const memoizedValue = useMemo(() => {
+  return expensiveCalculation(prop)
+}, [prop])
+
+// Memoize callbacks
+const memoizedCallback = useCallback(() => {
+  doSomething(prop)
+}, [prop])
+
+// Memoize components
+const MemoizedComponent = memo(Component, (prev, next) => {
+  return prev.id === next.id
+})
+```
+
+### Code Splitting
+```typescript
+// Lazy load components
+const LazyComponent = lazy(() => import('./LazyComponent'))
+
+// Use with Suspense
+<Suspense fallback={<Loading />}>
+  <LazyComponent />
+</Suspense>
+```
+
+## Error Boundaries
+```typescript
+// Error boundary component
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false }
+
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    console.error('Error caught:', error, info)
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <div>Something went wrong</div>
+    }
+    return this.props.children
+  }
+}
+```
+
+## Testing Patterns
+```typescript
+// Component testing with React Testing Library
+import { render, screen, fireEvent } from '@testing-library/react'
+
+test('button click increments counter', () => {
+  render(<Counter />)
+  const button = screen.getByRole('button')
+  fireEvent.click(button)
+  expect(screen.getByText('1')).toBeInTheDocument()
+})
+```
+
+## Best Practices
+- Use TypeScript for type safety
+- Implement proper error boundaries
+- Use proper prop types
+- Handle loading states
+- Implement proper error handling
+- Use proper event handlers
+- Follow accessibility guidelines
+- Use proper React.memo usage
+- Implement proper testing
+- Use proper key props in lists
+
+## Performance Guidelines
+- Avoid unnecessary re-renders
+- Use proper dependency arrays
+- Implement code splitting
+- Use proper memoization
+- Handle memory leaks
+- Use proper event cleanup
+- Implement proper loading states
+- Use proper error boundaries
+- Follow React concurrent features
+- Use proper Suspense boundaries 

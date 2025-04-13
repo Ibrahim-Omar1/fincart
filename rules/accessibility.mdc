@@ -1,0 +1,74 @@
+---
+description: Accessibility Rules
+globs: 
+alwaysApply: true
+---
+# Accessibility Rules (WCAG 2.1)
+
+@file .cursorrules
+
+## Core Principles (POUR)
+- Perceivable
+- Operable
+- Understandable
+- Robust
+
+## Semantic HTML
+```tsx
+// Good Example
+const GoodExample = () => (
+  <article>
+    <h1>Main Heading</h1>
+    <nav>
+      <ul>
+        <li><a href="/home">Home</a></li>
+      </ul>
+    </nav>
+    <main>
+      <section aria-labelledby="section-heading">
+        <h2 id="section-heading">Section Title</h2>
+        <p>Content...</p>
+      </section>
+    </main>
+    <footer>Footer content</footer>
+  </article>
+)
+```
+
+## ARIA Implementation
+```tsx
+// Dialog Example
+const AccessibleDialog = () => (
+  <div
+    role="dialog"
+    aria-labelledby="dialog-title"
+    aria-describedby="dialog-desc"
+    aria-modal="true"
+  >
+    <h2 id="dialog-title">Dialog Title</h2>
+    <p id="dialog-desc">Dialog description</p>
+  </div>
+)
+```
+
+## Color and Contrast
+- Minimum contrast ratio: 4.5:1 for normal text
+- Minimum contrast ratio: 3:1 for large text
+- Don't rely on color alone
+
+## Keyboard Navigation
+- All interactive elements must be keyboard accessible
+- Visible focus indicators
+- Logical tab order
+- Skip links for main content
+
+## Screen Reader Support
+- Proper heading hierarchy
+- Alternative text for images
+- ARIA labels for interactive elements
+- Status messages
+
+## Motion and Animation
+- Respect reduced motion preferences
+- Provide animation controls
+- No auto-playing media 

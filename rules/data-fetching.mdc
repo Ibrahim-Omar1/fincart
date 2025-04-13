@@ -1,0 +1,64 @@
+---
+description: Data Fetching Rules
+globs: 
+alwaysApply: true
+---
+# Data Fetching Rules
+
+@file .cursorrules
+
+## Priority Order
+1. Server Components (Preferred)
+```tsx
+// Example Server Component fetch
+async function ProductPage() {
+  const products = await getProducts()
+  return <ProductList products={products} />
+}
+```
+
+2. Route Handlers
+```tsx
+// app/api/products/route.ts
+export async function GET() {
+  const products = await db.products.findMany()
+  return Response.json(products)
+}
+```
+
+3. Server Actions
+```tsx
+// Server Action in Server Component
+export async function createProduct(data: ProductData) {
+  'use server'
+  await db.products.create(data)
+  revalidatePath('/products')
+}
+```
+
+4. TanStack Query (Client-only)
+```tsx
+// Only in Client Components when needed
+const { data } = useQuery({
+  queryKey: ['products'],
+  queryFn: fetchProducts
+})
+```
+
+## Caching Strategy
+- Use Route Cache
+- Implement proper revalidation
+- Handle stale data
+- Optimize for performance
+
+## Error Handling
+- Implement error boundaries
+- Show loading states
+- Handle network errors
+- Validate data with Zod
+
+## Security
+- Validate auth in route handlers
+- Sanitize inputs
+- Implement rate limiting
+- Use proper HTTP methods 

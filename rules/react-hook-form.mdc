@@ -1,0 +1,133 @@
+---
+description: React Hook Form Rules
+globs: 
+alwaysApply: true
+---
+---
+description: React Hook Form Rules
+globs: ["**/*.ts", "**/*.tsx"]
+alwaysApply: true
+---
+# React Hook Form Rules
+
+@file .cursorrules
+@file package.json
+
+## Installation & Version
+- Package: `react-hook-form: ^7.53.2`
+- Resolver: `@hookform/resolvers: ^3.9.1`
+- Validation: `zod: ^3.23.8`
+
+## Basic Setup
+```typescript
+// Form setup with Zod
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+
+const schema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8)
+});
+
+type FormValues = z.infer<typeof schema>;
+
+const Form = () => {
+  const form = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      email: '',
+      password: ''
+    }
+  });
+
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      {/* Form fields */}
+    </form>
+  );
+};
+```
+
+## Form Fields
+```typescript
+// Field implementation
+<div>
+  <label htmlFor="email">Email</label>
+  <input
+    id="email"
+    {...form.register('email')}
+    aria-invalid={!!form.formState.errors.email}
+    aria-describedby="email-error"
+  />
+  {form.formState.errors.email && (
+    <p id="email-error" className="text-red-500">
+      {form.formState.errors.email.message}
+    </p>
+  )}
+</div>
+```
+
+## Error Handling
+```typescript
+// Form error handling
+const onSubmit = async (data: FormValues) => {
+  try {
+    await submitForm(data);
+    form.reset();
+  } catch (error) {
+    form.setError('root', {
+      type: 'server',
+      message: 'Something went wrong'
+    });
+  }
+};
+```
+
+## Form State Management
+```typescript
+// Track form state
+const {
+  formState: { 
+    isSubmitting,
+    isDirty,
+    isValid,
+    errors
+  }
+} = form;
+
+// Disable submit when invalid
+<button 
+  type="submit"
+  disabled={!isValid || isSubmitting}
+>
+  {isSubmitting ? 'Submitting...' : 'Submit'}
+</button>
+```
+
+## Field Arrays
+```typescript
+// Dynamic field arrays
+const { fields, append, remove } = useFieldArray({
+  control: form.control,
+  name: 'items'
+});
+```
+
+## Best Practices
+- Use Zod for validation
+- Implement proper error messages
+- Show loading states
+- Handle server errors
+- Use proper ARIA attributes
+- Implement form reset
+- Track dirty/pristine state
+- Validate on blur/change as needed
+
+## Accessibility
+- Label all form fields
+- Use aria-invalid
+- Provide error messages
+- Support keyboard navigation
+- Use proper HTML5 input types
+- Implement proper focus management 

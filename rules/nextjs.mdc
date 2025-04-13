@@ -1,0 +1,52 @@
+---
+description: Next.js App Router Development Rules
+globs: 
+alwaysApply: true
+---
+# Next.js App Router Development Rules
+
+@file .cursorrules
+
+## Core Development Stack
+- Next.js App Router + TypeScript
+- React Server Components (RSC)
+- Shadcn UI + Radix + TailwindCSS
+- next-auth & next-intl
+- TanStack Query for data fetching
+- Zod for validation
+
+## File Structure Rules
+@file src/app/layout.tsx
+@file src/app/page.tsx
+
+## Component Rules
+- Server-first architecture
+- Use RSC by default
+- Add 'use client' only when needed
+- Follow component documentation standards
+
+## Data Fetching Priority
+1. Server Components (native fetch)
+2. Route Handlers
+3. Server Actions
+4. TanStack Query (client-only when needed)
+
+## Security Guidelines
+- No hardcoded API keys
+- Use environment variables
+- Implement CSRF protection
+- Validate inputs with Zod
+- Proper auth checks
+
+## Performance Rules
+- Optimize images with next/image
+- Use dynamic imports for client components
+- Implement proper Suspense boundaries
+- Follow proper caching strategies
+
+## Accessibility Standards
+- Follow WCAG 2.1 guidelines
+- Use semantic HTML
+- Implement proper ARIA attributes
+- Ensure proper color contrast
+- Support keyboard navigation 

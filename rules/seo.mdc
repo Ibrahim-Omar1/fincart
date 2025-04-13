@@ -1,0 +1,147 @@
+---
+description: SEO and Structured Data Rules
+globs: 
+alwaysApply: true
+---
+---
+description: SEO and Structured Data Rules
+globs: ["**/*.ts", "**/*.tsx", "**/metadata.ts"]
+alwaysApply: true
+---
+# SEO and Structured Data Rules
+
+@file .cursorrules
+@file package.json
+
+## Metadata Setup
+```typescript
+// app/layout.tsx
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: {
+    template: '%s | Site Name',
+    default: 'Site Name',
+  },
+  description: 'Site description',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://your-domain.com',
+    siteName: 'Site Name',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/apple-icon.png',
+  }
+}
+```
+
+## Schema.org Implementation
+```typescript
+// Using schema-dts
+import { Organization, WithContext } from 'schema-dts'
+
+const organizationSchema: WithContext<Organization> = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Your Company Name',
+  url: 'https://your-domain.com',
+  logo: 'https://your-domain.com/logo.png',
+  sameAs: [
+    'https://twitter.com/company',
+    'https://facebook.com/company'
+  ]
+}
+
+// Component implementation
+export function SchemaOrg() {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(organizationSchema)
+      }}
+    />
+  )
+}
+```
+
+## Image Optimization
+```typescript
+// Use Next.js Image component
+import Image from 'next/image'
+
+<Image
+  src="/hero.jpg"
+  alt="Hero image"
+  width={1200}
+  height={630}
+  priority
+  className="object-cover"
+/>
+```
+
+## Meta Tags
+```typescript
+// Page-specific metadata
+export const metadata: Metadata = {
+  title: 'Page Title',
+  description: 'Page description',
+  openGraph: {
+    title: 'Page Title',
+    description: 'Page description',
+    images: [{
+      url: 'https://your-domain.com/og-image.jpg',
+      width: 1200,
+      height: 630,
+      alt: 'OG Image'
+    }]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Page Title',
+    description: 'Page description',
+    images: ['https://your-domain.com/og-image.jpg']
+  }
+}
+```
+
+## Structured Data Types
+- Organization
+- WebSite
+- Article
+- Product
+- BreadcrumbList
+- FAQPage
+- LocalBusiness
+- Event
+
+## Best Practices
+- Use semantic HTML
+- Implement proper meta tags
+- Optimize images
+- Use canonical URLs
+- Implement proper schemas
+- Handle dynamic metadata
+- Support social sharing
+
+## Performance
+- Optimize Core Web Vitals
+- Implement proper caching
+- Use proper image formats
+- Minimize JavaScript
+- Implement proper loading
+- Handle mobile optimization
+
+## Accessibility
+- Proper heading hierarchy
+- Alt text for images
+- ARIA labels
+- Keyboard navigation
+- Color contrast
+- Screen reader support 

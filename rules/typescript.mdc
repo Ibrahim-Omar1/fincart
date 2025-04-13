@@ -1,0 +1,247 @@
+---
+description: TypeScript Patterns and Best Practices
+globs: 
+alwaysApply: true
+---
+---
+description: TypeScript Patterns and Best Practices
+globs: ["**/*.ts", "**/*.tsx"]
+alwaysApply: true
+---
+# TypeScript Patterns and Best Practices
+
+@file .cursorrules
+@file package.json
+
+## Type Definitions
+
+### Basic Types
+```typescript
+// Use proper type annotations
+const string: string = 'text'
+const number: number = 42
+const boolean: boolean = true
+const array: string[] = ['a', 'b']
+const tuple: [string, number] = ['text', 42]
+const object: { id: number } = { id: 1 }
+```
+
+### Interfaces vs Types
+```typescript
+// Prefer interfaces for objects
+interface User {
+  id: string
+  name: string
+  age?: number // Optional property
+  readonly email: string // Immutable property
+}
+
+// Use types for unions and intersections
+type Status = 'pending' | 'active' | 'inactive'
+type NumberOrString = number | string
+type UserWithRole = User & { role: string }
+```
+
+### Generics
+```typescript
+// Generic functions
+function getFirst<T>(array: T[]): T | undefined {
+  return array[0]
+}
+
+// Generic interfaces
+interface Response<T> {
+  data: T
+  status: number
+}
+
+// Generic constraints
+function merge<T extends object, U extends object>(obj1: T, obj2: U): T & U {
+  return { ...obj1, ...obj2 }
+}
+```
+
+### Utility Types
+```typescript
+// Built-in utility types
+type UserPartial = Partial<User>
+type UserRequired = Required<User>
+type UserReadonly = Readonly<User>
+type UserPick = Pick<User, 'id' | 'name'>
+type UserOmit = Omit<User, 'age'>
+type UserRecord = Record<'admin' | 'user', User>
+
+// Custom utility types
+type Nullable<T> = T | null
+type AsyncResponse<T> = Promise<Response<T>>
+```
+
+## Function Patterns
+
+### Function Types
+```typescript
+// Function type definitions
+type Callback = (error: Error | null, result: string) => void
+type AsyncFunction = () => Promise<void>
+type EventHandler = (event: React.MouseEvent) => void
+
+// Function overloads
+function createElement(tag: 'a'): HTMLAnchorElement
+function createElement(tag: 'canvas'): HTMLCanvasElement
+function createElement(tag: string): HTMLElement {
+  return document.createElement(tag)
+}
+```
+
+### Error Handling
+```typescript
+// Custom error types
+class ValidationError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'ValidationError'
+  }
+}
+
+// Type-safe error handling
+function handleError(error: unknown) {
+  if (error instanceof ValidationError) {
+    console.error(error.message)
+  } else if (error instanceof Error) {
+    console.error('Unknown error:', error.message)
+  }
+}
+```
+
+## API Patterns
+
+### API Types
+```typescript
+// API response types
+interface ApiResponse<T> {
+  data: T
+  meta: {
+    page: number
+    total: number
+  }
+}
+
+// API error types
+interface ApiError {
+  code: string
+  message: string
+  details?: Record<string, string>
+}
+
+// Type-safe API client
+async function fetchData<T>(url: string): Promise<ApiResponse<T>> {
+  const response = await fetch(url)
+  if (!response.ok) {
+    const error: ApiError = await response.json()
+    throw new Error(error.message)
+  }
+  return response.json()
+}
+```
+
+### Zod Validation
+```typescript
+// Schema definition
+const userSchema = z.object({
+  id: z.string().uuid(),
+  email: z.string().email(),
+  age: z.number().min(18).optional()
+})
+
+// Type inference
+type User = z.infer<typeof userSchema>
+
+// Validation
+function validateUser(data: unknown): User {
+  return userSchema.parse(data)
+}
+```
+
+## React Patterns
+
+### Component Props
+```typescript
+// Prop types
+interface ButtonProps {
+  variant: 'primary' | 'secondary'
+  size?: 'sm' | 'md' | 'lg'
+  onClick?: () => void
+  children: React.ReactNode
+}
+
+// Component with props
+const Button: React.FC<ButtonProps> = ({
+  variant,
+  size = 'md',
+  onClick,
+  children
+}) => {
+  return (
+    <button
+      className={`btn-${variant} btn-${size}`}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  )
+}
+```
+
+### Event Handling
+```typescript
+// Event types
+interface FormElements extends HTMLFormControlsCollection {
+  email: HTMLInputElement
+  password: HTMLInputElement
+}
+
+interface SignInForm extends HTMLFormElement {
+  readonly elements: FormElements
+}
+
+// Event handler
+function handleSubmit(event: React.FormEvent<SignInForm>) {
+  event.preventDefault()
+  const form = event.currentTarget
+  const email = form.elements.email.value
+}
+```
+
+## Best Practices
+
+### Type Safety
+- Enable strict mode in tsconfig
+- Avoid using `any`
+- Use proper type guards
+- Implement proper error types
+- Use proper utility types
+- Handle null and undefined
+
+### Code Organization
+- Use barrel exports
+- Organize imports properly
+- Use proper file naming
+- Implement proper type exports
+- Use proper module augmentation
+- Follow proper namespace usage
+
+### Performance
+- Use proper type inference
+- Avoid excessive unions
+- Use proper mapped types
+- Implement proper generics
+- Use proper conditional types
+- Follow proper type narrowing
+
+### Documentation
+- Use proper JSDoc comments
+- Document complex types
+- Use proper type examples
+- Implement proper type tests
+- Use proper type assertions
+- Follow proper type naming 

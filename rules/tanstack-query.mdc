@@ -1,0 +1,122 @@
+---
+description: TanStack Query Rules
+globs: 
+alwaysApply: true
+---
+---
+description: TanStack Query Rules
+globs: ["**/*.ts", "**/*.tsx"]
+alwaysApply: true
+---
+# TanStack Query Rules
+
+@file .cursorrules
+@file package.json
+
+## Installation & Version
+- Package: `@tanstack/react-query: ^5.56.2`
+- Provider setup in root layout
+
+## Query Key Conventions
+```typescript
+// Structured query keys
+const userKey = ['users'] as const;
+const userListKey = ['users', 'list'] as const;
+const userDetailKey = (id: string) => ['users', 'detail', id] as const;
+
+// Usage example
+const { data: user } = useQuery({
+  queryKey: userDetailKey(id),
+  queryFn: () => fetchUser(id)
+});
+```
+
+## Query Functions
+```typescript
+// Proper error handling
+const queryFn = async ({ queryKey: [_, id] }) => {
+  try {
+    const response = await fetch(`/api/users/${id}`);
+    if (!response.ok) throw new Error('Network response error');
+    return response.json();
+  } catch (error) {
+    // Log error for monitoring
+    console.error('Query error:', error);
+    throw error;
+  }
+};
+```
+
+## Caching & Stale Time
+```typescript
+// Default options
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      cacheTime: 1000 * 60 * 30, // 30 minutes
+      retry: 3,
+      refetchOnWindowFocus: false
+    }
+  }
+});
+```
+
+## Mutations
+```typescript
+// Optimistic updates
+const mutation = useMutation({
+  mutationFn: updateTodo,
+  onMutate: async (newTodo) => {
+    await queryClient.cancelQueries({ queryKey: ['todos'] });
+    const previousTodos = queryClient.getQueryData(['todos']);
+    queryClient.setQueryData(['todos'], (old) => [...old, newTodo]);
+    return { previousTodos };
+  },
+  onError: (err, newTodo, context) => {
+    queryClient.setQueryData(['todos'], context.previousTodos);
+  }
+});
+```
+
+## Infinite Queries
+```typescript
+// Proper implementation
+const {
+  data,
+  fetchNextPage,
+  hasNextPage
+} = useInfiniteQuery({
+  queryKey: ['projects'],
+  queryFn: fetchProjectPage,
+  getNextPageParam: (lastPage) => lastPage.nextCursor
+});
+```
+
+## Suspense Mode
+```typescript
+// Use with Suspense
+const { data } = useQuery({
+  queryKey: ['data'],
+  queryFn: fetchData,
+  suspense: true
+});
+```
+
+## Error Boundaries
+```typescript
+// Wrap queries with error boundary
+<ErrorBoundary fallback={<ErrorComponent />}>
+  <Suspense fallback={<Loading />}>
+    <QueryComponent />
+  </Suspense>
+</ErrorBoundary>
+```
+
+## Best Practices
+- Use structured query keys
+- Implement proper error handling
+- Set appropriate stale/cache times
+- Use optimistic updates for better UX
+- Handle loading and error states
+- Implement proper type safety 

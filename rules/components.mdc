@@ -1,0 +1,62 @@
+---
+description: Component Development Rules
+globs: 
+alwaysApply: true
+---
+# Component Development Rules
+
+@file .cursorrules
+
+## Naming Conventions
+- Components: `PascalCase.tsx`
+- Directories: `kebab-case`
+- Types: `PascalCase.types.ts`
+- Utils: `camelCase.ts`
+- Hooks: `usePascalCase.ts`
+
+## Component Structure
+```tsx
+// Example component structure
+interface Props {
+  // Props interface
+}
+
+export function Component({ prop1, prop2 }: Props) {
+  return (
+    // JSX
+  )
+}
+```
+
+## Documentation Standards
+```tsx
+/**
+ * Component description
+ * @component
+ * @example
+ * ```tsx
+ * <Component prop1="value" />
+ * ```
+ */
+```
+
+## UI Components
+- Use Shadcn UI components
+- Extend with Radix when needed
+- Follow TailwindCSS class order
+- Implement proper loading states
+- Use Lucide icons consistently
+
+## Form Components
+- Use react-hook-form
+- Implement Zod validation
+- Handle loading states
+- Show proper error messages
+- Support keyboard navigation
+
+## Data Display
+- Implement proper loading states
+- Use Suspense boundaries
+- Handle error states
+- Support SSR/RSC
+- Follow accessibility guidelines 

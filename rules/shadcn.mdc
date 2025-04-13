@@ -1,0 +1,154 @@
+---
+description: Shadcn UI Rules
+globs: 
+alwaysApply: true
+---
+---
+description: Shadcn UI Rules
+globs: ["**/*.ts", "**/*.tsx"]
+alwaysApply: true
+---
+# Shadcn UI Rules
+
+@file .cursorrules
+@file package.json
+
+## Installation & Dependencies
+- Shadcn UI: `shadcn: ^2.1.6`
+- Radix UI primitives
+- TailwindCSS: `tailwindcss: ^3.4.3`
+- Class Variance Authority: `class-variance-authority: ^0.7.0`
+- Tailwind Merge: `tailwind-merge: ^2.5.2`
+
+## Component Usage
+```typescript
+// Import from shadcn components
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+
+// Use with variants
+<Button 
+  variant="default" 
+  size="lg"
+>
+  Click me
+</Button>
+```
+
+## Custom Variants
+```typescript
+// Using cva for variants
+import { cva } from 'class-variance-authority';
+
+const buttonVariants = cva(
+  'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors',
+  {
+    variants: {
+      variant: {
+        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+      },
+      size: {
+        default: 'h-10 px-4 py-2',
+        sm: 'h-9 px-3',
+        lg: 'h-11 px-8',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  }
+);
+```
+
+## Form Components
+```typescript
+// Form implementation
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+
+<FormField
+  control={form.control}
+  name="username"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Username</FormLabel>
+      <FormControl>
+        <Input {...field} />
+      </FormControl>
+      <FormDescription>
+        This is your public display name.
+      </FormDescription>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+```
+
+## Dialog/Modal
+```typescript
+// Dialog implementation
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+
+<Dialog>
+  <DialogTrigger>Open</DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Dialog Title</DialogTitle>
+      <DialogDescription>
+        Dialog description
+      </DialogDescription>
+    </DialogHeader>
+  </DialogContent>
+</Dialog>
+```
+
+## Theme Configuration
+```typescript
+// tailwind.config.js
+module.exports = {
+  darkMode: ["class"],
+  content: ["./src/**/*.{ts,tsx}"],
+  theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
+  }
+}
+```
+
+## Best Practices
+- Use component composition
+- Implement proper variants
+- Follow accessibility guidelines
+- Use proper color schemes
+- Maintain consistent spacing
+- Use proper animations
+- Follow responsive design patterns
+
+## Accessibility
+- Use proper ARIA labels
+- Implement keyboard navigation
+- Support screen readers
+- Maintain proper contrast
+- Use proper focus management
+- Handle reduced motion 
